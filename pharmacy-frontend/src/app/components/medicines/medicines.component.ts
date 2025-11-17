@@ -20,6 +20,8 @@ export class MedicinesComponent implements OnInit {
   showForm = false;
   editingId: number | null = null;
   isLoggedIn = false;
+  loading = false;
+  deletingId: number | null = null;
 
   newMedicine: CreateMedicineDto = {
     name: '',
@@ -84,23 +86,44 @@ export class MedicinesComponent implements OnInit {
   }
 
   saveMedicine(): void {
+    this.loading = true;
     if (this.editingId) {
-      this.medicineService.update(this.editingId, this.newMedicine).subscribe(() => {
-        this.loadMedicines();
-        this.closeForm();
+      this.medicineService.update(this.editingId, this.newMedicine).subscribe({
+        next: () => {
+          this.loadMedicines();
+          this.closeForm();
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
       });
     } else {
-      this.medicineService.create(this.newMedicine).subscribe(() => {
-        this.loadMedicines();
-        this.closeForm();
+      this.medicineService.create(this.newMedicine).subscribe({
+        next: () => {
+          this.loadMedicines();
+          this.closeForm();
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
       });
     }
   }
 
   deleteMedicine(id: number): void {
+    if (this.deletingId) return;
     if (confirm('Are you sure you want to delete this medicine?')) {
-      this.medicineService.delete(id).subscribe(() => {
-        this.loadMedicines();
+      this.deletingId = id;
+      this.medicineService.delete(id).subscribe({
+        next: () => {
+          this.loadMedicines();
+          this.deletingId = null;
+        },
+        error: () => {
+          this.deletingId = null;
+        }
       });
     }
   }

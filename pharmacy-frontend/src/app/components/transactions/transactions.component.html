@@ -30,7 +30,7 @@
           <td>{{ transaction.transactionDate | date }}</td>
           <td>{{ transaction.notes || '-' }}</td>
           <td *ngIf="isLoggedIn">
-            <button class="btn-action btn-delete" (click)="deleteTransaction(transaction.id!)">Delete</button>
+            <button class="btn-action btn-delete" (click)="deleteTransaction(transaction.id!)" [disabled]="deletingId === transaction.id">{{ deletingId === transaction.id ? 'Deleting...' : 'Delete' }}</button>
           </td>
         </tr>
       </tbody>
@@ -64,7 +64,7 @@
               <option *ngFor="let employee of employees" [value]="employee.id">{{ employee.name }}</option>
             </select>
           </div>
-          <div class="form-group">
+          <div class="form-group" *ngIf="newTransaction.transactionType === 'Out'">
             <label>Client (for Out transactions)</label>
             <select [(ngModel)]="newTransaction.clientId" name="client" class="form-control">
               <option [ngValue]="undefined">Select Client</option>
@@ -76,12 +76,17 @@
           <label>Quantity *</label>
           <input type="number" [(ngModel)]="newTransaction.quantity" name="quantity" required class="form-control" min="1" />
         </div>
+        
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+        
         <div class="form-group">
           <label>Notes</label>
           <textarea [(ngModel)]="newTransaction.notes" name="notes" class="form-control" rows="3"></textarea>
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">{{ loading ? 'Saving...' : 'Save' }}</button>
           <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
         </div>
       </form>

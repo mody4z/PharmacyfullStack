@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class EmployeeService {
-  private apiUrl = 'http://localhost:5091/api/Employees';
+  private apiUrl = 'https://pharmacy-mahmoud-shehata.runasp.net/api/Employees';
 
   constructor(
     private http: HttpClient,

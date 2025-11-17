@@ -31,7 +31,7 @@
           <td>{{ medicine.expiryDate | date }}</td>
           <td *ngIf="isLoggedIn">
             <button class="btn-action btn-edit" (click)="editMedicine(medicine)">Edit</button>
-            <button class="btn-action btn-delete" (click)="deleteMedicine(medicine.id!)">Delete</button>
+            <button class="btn-action btn-delete" (click)="deleteMedicine(medicine.id!)" [disabled]="deletingId === medicine.id">{{ deletingId === medicine.id ? 'Deleting...' : 'Delete' }}</button>
           </td>
         </tr>
       </tbody>
@@ -75,7 +75,7 @@
           <input type="date" [(ngModel)]="newMedicine.expiryDate" name="expiry" required class="form-control" />
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" [disabled]="loading">{{ loading ? 'Saving...' : 'Save' }}</button>
           <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
         </div>
       </form>

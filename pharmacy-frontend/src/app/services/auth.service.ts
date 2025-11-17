@@ -8,7 +8,7 @@ import { LoginDto, RegisterDto, AuthResponse } from '../models/auth.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5091/api/Auth';
+  private apiUrl = 'https://pharmacy-mahmoud-shehata.runasp.net/api/Auth';
   private tokenKey = 'auth_token';
   private currentUserSubject = new BehaviorSubject<AuthResponse | null>(this.getStoredUser());
   public currentUser$ = this.currentUserSubject.asObservable();

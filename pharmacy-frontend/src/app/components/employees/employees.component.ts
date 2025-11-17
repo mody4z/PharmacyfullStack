@@ -20,6 +20,8 @@ export class EmployeesComponent implements OnInit {
   showForm = false;
   editingId: number | null = null;
   isLoggedIn = false;
+  loading = false;
+  deletingId: number | null = null;
 
   newEmployee: CreateEmployeeDto = {
     name: '',
@@ -42,6 +44,7 @@ export class EmployeesComponent implements OnInit {
 
   loadEmployees(): void {
     this.employeeService.getAll().subscribe(data => {
+      console.log('Loaded employees:', data);
       this.employees = data;
       this.filteredEmployees = data;
     });
@@ -67,7 +70,17 @@ export class EmployeesComponent implements OnInit {
   editEmployee(employee: Employee): void {
     this.showForm = true;
     this.editingId = employee.id!;
-    this.newEmployee = { ...employee };
+    // Format date for input field
+    const hireDate = employee.hireDate ? new Date(employee.hireDate).toISOString().split('T')[0] : '';
+    this.newEmployee = { 
+      name: employee.name,
+      position: employee.position,
+      phoneNumber: employee.phoneNumber,
+      email: employee.email,
+      salary: employee.salary,
+      hireDate: hireDate
+    };
+    console.log('Editing employee:', this.newEmployee);
   }
 
   resetForm(): void {
@@ -82,23 +95,50 @@ export class EmployeesComponent implements OnInit {
   }
 
   saveEmployee(): void {
+    this.loading = true;
+    // Format date to ISO string if needed
+    const employeeData = {
+      ...this.newEmployee,
+      hireDate: this.newEmployee.hireDate ? new Date(this.newEmployee.hireDate).toISOString() : new Date().toISOString()
+    };
+
     if (this.editingId) {
-      this.employeeService.update(this.editingId, this.newEmployee).subscribe(() => {
-        this.loadEmployees();
-        this.closeForm();
+      this.employeeService.update(this.editingId, employeeData).subscribe({
+        next: () => {
+          this.loadEmployees();
+          this.closeForm();
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
       });
     } else {
-      this.employeeService.create(this.newEmployee).subscribe(() => {
-        this.loadEmployees();
-        this.closeForm();
+      this.employeeService.create(employeeData).subscribe({
+        next: () => {
+          this.loadEmployees();
+          this.closeForm();
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
       });
     }
   }
 
   deleteEmployee(id: number): void {
+    if (this.deletingId) return;
     if (confirm('Are you sure you want to delete this employee?')) {
-      this.employeeService.delete(id).subscribe(() => {
-        this.loadEmployees();
+      this.deletingId = id;
+      this.employeeService.delete(id).subscribe({
+        next: () => {
+          this.loadEmployees();
+          this.deletingId = null;
+        },
+        error: () => {
+          this.deletingId = null;
+        }
       });
     }
   }

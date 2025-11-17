@@ -20,6 +20,8 @@ export class ClientsComponent implements OnInit {
   showForm = false;
   editingId: number | null = null;
   isLoggedIn = false;
+  loading = false;
+  deletingId: number | null = null;
 
   newClient: CreateClientDto = {
     name: '',
@@ -78,23 +80,44 @@ export class ClientsComponent implements OnInit {
   }
 
   saveClient(): void {
+    this.loading = true;
     if (this.editingId) {
-      this.clientService.update(this.editingId, this.newClient).subscribe(() => {
-        this.loadClients();
-        this.closeForm();
+      this.clientService.update(this.editingId, this.newClient).subscribe({
+        next: () => {
+          this.loadClients();
+          this.closeForm();
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
       });
     } else {
-      this.clientService.create(this.newClient).subscribe(() => {
-        this.loadClients();
-        this.closeForm();
+      this.clientService.create(this.newClient).subscribe({
+        next: () => {
+          this.loadClients();
+          this.closeForm();
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
       });
     }
   }
 
   deleteClient(id: number): void {
+    if (this.deletingId) return;
     if (confirm('Are you sure you want to delete this client?')) {
-      this.clientService.delete(id).subscribe(() => {
-        this.loadClients();
+      this.deletingId = id;
+      this.clientService.delete(id).subscribe({
+        next: () => {
+          this.loadClients();
+          this.deletingId = null;
+        },
+        error: () => {
+          this.deletingId = null;
+        }
       });
     }
   }

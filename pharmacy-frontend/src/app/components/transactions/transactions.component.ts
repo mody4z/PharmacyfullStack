@@ -23,6 +23,9 @@ export class TransactionsComponent implements OnInit {
   clients: any[] = [];
   showForm = false;
   isLoggedIn = false;
+  errorMessage = '';
+  loading = false;
+  deletingId: number | null = null;
 
   newTransaction: CreateInOutDto = {
     medicineId: 0,
@@ -77,22 +80,53 @@ export class TransactionsComponent implements OnInit {
   }
 
   saveTransaction(): void {
-    this.inOutService.create(this.newTransaction).subscribe(() => {
-      this.loadTransactions();
-      this.closeForm();
+    this.errorMessage = '';
+    this.loading = true;
+    
+    // Check if transaction type is 'Out'
+    if (this.newTransaction.transactionType === 'Out') {
+      const selectedMedicine = this.medicines.find(m => m.id === Number(this.newTransaction.medicineId));
+      
+      if (selectedMedicine && this.newTransaction.quantity > selectedMedicine.stockQuantity) {
+        this.errorMessage = `Insufficient stock! Available quantity: ${selectedMedicine.stockQuantity}`;
+        this.loading = false;
+        return;
+      }
+    }
+
+    this.inOutService.create(this.newTransaction).subscribe({
+      next: () => {
+        this.loadTransactions();
+        this.loadDropdownData(); // Reload to get updated stock quantities
+        this.closeForm();
+        this.loading = false;
+      },
+      error: (error) => {
+        this.errorMessage = error.error?.message || 'Failed to save transaction. Please try again.';
+        this.loading = false;
+      }
     });
   }
 
   deleteTransaction(id: number): void {
+    if (this.deletingId) return; // Prevent multiple deletes
     if (confirm('Are you sure you want to delete this transaction?')) {
-      this.inOutService.delete(id).subscribe(() => {
-        this.loadTransactions();
+      this.deletingId = id;
+      this.inOutService.delete(id).subscribe({
+        next: () => {
+          this.loadTransactions();
+          this.deletingId = null;
+        },
+        error: () => {
+          this.deletingId = null;
+        }
       });
     }
   }
 
   closeForm(): void {
     this.showForm = false;
+    this.errorMessage = '';
     this.resetForm();
   }
 }
