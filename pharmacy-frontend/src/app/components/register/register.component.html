@@ -1,0 +1,59 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Employee Registration</h2>
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="username">Username *</label>
+          <input type="text" id="username" name="username" [(ngModel)]="registerData.username" required class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" [(ngModel)]="registerData.email" required class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password *</label>
+        <input type="password" id="password" name="password" [(ngModel)]="registerData.password" required class="form-control" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="employeeName">Employee Name *</label>
+          <input type="text" id="employeeName" name="employeeName" [(ngModel)]="registerData.employeeName" required class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="position">Position *</label>
+          <input type="text" id="position" name="position" [(ngModel)]="registerData.position" required class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number *</label>
+          <input type="tel" id="phoneNumber" name="phoneNumber" [(ngModel)]="registerData.phoneNumber" required class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="salary">Salary *</label>
+          <input type="number" id="salary" name="salary" [(ngModel)]="registerData.salary" required class="form-control" />
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading || !registerForm.valid">
+        {{ loading ? 'Registering...' : 'Register' }}
+      </button>
+
+      <div class="login-link">
+        Already have an account? <a routerLink="/login">Login here</a>
+      </div>
+    </form>
+  </div>
+</div>

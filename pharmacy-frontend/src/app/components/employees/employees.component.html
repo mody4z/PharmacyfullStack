@@ -1,0 +1,80 @@
+<div class="page-container">
+  <div class="header">
+    <h2>Employees Management</h2>
+    <div class="header-actions">
+      <input type="text" [(ngModel)]="searchTerm" (input)="filterEmployees()" placeholder="Search employees..." class="search-input" />
+      <button *ngIf="isLoggedIn" class="btn btn-primary" (click)="openForm()">+ Add Employee</button>
+      <a routerLink="/dashboard" class="btn btn-secondary"> Back</a>
+    </div>
+  </div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Position</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Salary</th>
+          <th>Hire Date</th>
+          <th *ngIf="isLoggedIn">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let employee of filteredEmployees">
+          <td>{{ employee.name }}</td>
+          <td>{{ employee.position }}</td>
+          <td>{{ employee.phoneNumber }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.salary | currency }}</td>
+          <td>{{ employee.hireDate | date }}</td>
+          <td *ngIf="isLoggedIn">
+            <button class="btn-action btn-edit" (click)="editEmployee(employee)">Edit</button>
+            <button class="btn-action btn-delete" (click)="deleteEmployee(employee.id!)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal" *ngIf="showForm">
+    <div class="modal-content">
+      <h3>{{ editingId ? 'Edit Employee' : 'Add New Employee' }}</h3>
+      <form (ngSubmit)="saveEmployee()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Name *</label>
+            <input type="text" [(ngModel)]="newEmployee.name" name="name" required class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Position *</label>
+            <input type="text" [(ngModel)]="newEmployee.position" name="position" required class="form-control" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" [(ngModel)]="newEmployee.phoneNumber" name="phone" required class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" [(ngModel)]="newEmployee.email" name="email" required class="form-control" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Salary *</label>
+            <input type="number" [(ngModel)]="newEmployee.salary" name="salary" required class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Hire Date *</label>
+            <input type="date" [(ngModel)]="newEmployee.hireDate" name="hireDate" required class="form-control" />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

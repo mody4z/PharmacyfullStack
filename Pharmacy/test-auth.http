@@ -1,0 +1,57 @@
+### Login with Admin
+POST http://localhost:5091/api/Auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin@123"
+}
+
+### Login with Mohamed
+POST http://localhost:5091/api/Auth/login
+Content-Type: application/json
+
+{
+  "username": "mohamed.y",
+  "password": "Pharma@123"
+}
+
+### Login with Fatma
+POST http://localhost:5091/api/Auth/login
+Content-Type: application/json
+
+{
+  "username": "fatma.a",
+  "password": "Pharma@123"
+}
+
+### Register new user (creates new employee automatically)
+POST http://localhost:5091/api/Auth/register
+Content-Type: application/json
+
+{
+  "username": "Mohammed",
+  "email": "3tra@example.com",
+  "password": "S@jed123",
+  "employeeName": "Mohammed Ahmed",
+  "position": "Pharmacist",
+  "phoneNumber": "01234567890",
+  "salary": 8000
+}
+
+### Register another user
+POST http://localhost:5091/api/Auth/register
+Content-Type: application/json
+
+{
+  "username": "sara.user",
+  "email": "sara@pharmacy.com",
+  "password": "Sara@123",
+  "employeeName": "Sara Hassan",
+  "position": "Pharmacy Assistant",
+  "phoneNumber": "01098765432",
+  "salary": 5500
+}
+
+### Get all employees to see available IDs
+GET http://localhost:5091/api/Employees

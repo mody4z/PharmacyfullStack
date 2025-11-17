@@ -1,0 +1,90 @@
+<div class="page-container">
+  <div class="header">
+    <h2>Transactions Management</h2>
+    <div class="header-actions">
+      <button *ngIf="isLoggedIn" class="btn btn-primary" (click)="openForm()">+ New Transaction</button>
+      <a routerLink="/dashboard" class="btn btn-secondary"> Back</a>
+    </div>
+  </div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Medicine</th>
+          <th>Employee</th>
+          <th>Client</th>
+          <th>Type</th>
+          <th>Quantity</th>
+          <th>Date</th>
+          <th>Notes</th>
+          <th *ngIf="isLoggedIn">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions">
+          <td>{{ transaction.medicineName }}</td>
+          <td>{{ transaction.employeeName }}</td>
+          <td>{{ transaction.clientName || 'N/A' }}</td>
+          <td><span [class]="transaction.transactionType === 'In' ? 'badge-in' : 'badge-out'">{{ transaction.transactionType }}</span></td>
+          <td>{{ transaction.quantity }}</td>
+          <td>{{ transaction.transactionDate | date }}</td>
+          <td>{{ transaction.notes || '-' }}</td>
+          <td *ngIf="isLoggedIn">
+            <button class="btn-action btn-delete" (click)="deleteTransaction(transaction.id!)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal" *ngIf="showForm">
+    <div class="modal-content">
+      <h3>New Transaction</h3>
+      <form (ngSubmit)="saveTransaction()">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Medicine *</label>
+            <select [(ngModel)]="newTransaction.medicineId" name="medicine" required class="form-control">
+              <option value="0">Select Medicine</option>
+              <option *ngFor="let medicine of medicines" [value]="medicine.id">{{ medicine.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Transaction Type *</label>
+            <select [(ngModel)]="newTransaction.transactionType" name="type" required class="form-control">
+              <option value="In">In (Stock Increase)</option>
+              <option value="Out">Out (Sale)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Employee *</label>
+            <select [(ngModel)]="newTransaction.employeeId" name="employee" required class="form-control">
+              <option value="0">Select Employee</option>
+              <option *ngFor="let employee of employees" [value]="employee.id">{{ employee.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Client (for Out transactions)</label>
+            <select [(ngModel)]="newTransaction.clientId" name="client" class="form-control">
+              <option [ngValue]="undefined">Select Client</option>
+              <option *ngFor="let client of clients" [value]="client.id">{{ client.name }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Quantity *</label>
+          <input type="number" [(ngModel)]="newTransaction.quantity" name="quantity" required class="form-control" min="1" />
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea [(ngModel)]="newTransaction.notes" name="notes" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

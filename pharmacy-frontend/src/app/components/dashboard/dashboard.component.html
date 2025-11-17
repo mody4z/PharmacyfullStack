@@ -1,0 +1,73 @@
+<div class="dashboard">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h1>Pharmacy Management System</h1>
+    </div>
+    <div class="navbar-user">
+      <span>Welcome, {{ currentUser?.username }}</span>
+      <button class="btn btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon medicines">💊</div>
+        <div class="stat-info">
+          <h3>{{ stats.medicines }}</h3>
+          <p>Medicines</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon employees">👥</div>
+        <div class="stat-info">
+          <h3>{{ stats.employees }}</h3>
+          <p>Employees</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon clients">🧑‍⚕️</div>
+        <div class="stat-info">
+          <h3>{{ stats.clients }}</h3>
+          <p>Clients</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon transactions">📋</div>
+        <div class="stat-info">
+          <h3>{{ stats.transactions }}</h3>
+          <p>Transactions</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-grid">
+      <a routerLink="/medicines" class="menu-card">
+        <div class="menu-icon">💊</div>
+        <h3>Medicines</h3>
+        <p>Manage medicine inventory</p>
+      </a>
+
+      <a routerLink="/employees" class="menu-card">
+        <div class="menu-icon">👥</div>
+        <h3>Employees</h3>
+        <p>Manage employee records</p>
+      </a>
+
+      <a routerLink="/clients" class="menu-card">
+        <div class="menu-icon">🧑‍⚕️</div>
+        <h3>Clients</h3>
+        <p>Manage client information</p>
+      </a>
+
+      <a routerLink="/transactions" class="menu-card">
+        <div class="menu-icon">📋</div>
+        <h3>Transactions</h3>
+        <p>View and manage transactions</p>
+      </a>
+    </div>
+  </div>
+</div>

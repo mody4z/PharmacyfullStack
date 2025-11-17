@@ -1,0 +1,84 @@
+<div class="page-container">
+  <div class="header">
+    <h2>Medicines Management</h2>
+    <div class="header-actions">
+      <input type="text" [(ngModel)]="searchTerm" (input)="filterMedicines()" placeholder="Search medicines..." class="search-input" />
+      <button *ngIf="isLoggedIn" class="btn btn-primary" (click)="openForm()">+ Add Medicine</button>
+      <a routerLink="/dashboard" class="btn btn-secondary">← Back</a>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Manufacturer</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Expiry Date</th>
+          <th *ngIf="isLoggedIn">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medicine of filteredMedicines">
+          <td>{{ medicine.name }}</td>
+          <td>{{ medicine.category }}</td>
+          <td>{{ medicine.manufacturer }}</td>
+          <td>{{ medicine.price | currency }}</td>
+          <td>{{ medicine.stockQuantity }}</td>
+          <td>{{ medicine.expiryDate | date }}</td>
+          <td *ngIf="isLoggedIn">
+            <button class="btn-action btn-edit" (click)="editMedicine(medicine)">Edit</button>
+            <button class="btn-action btn-delete" (click)="deleteMedicine(medicine.id!)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal" *ngIf="showForm">
+    <div class="modal-content">
+      <h3>{{ editingId ? 'Edit Medicine' : 'Add New Medicine' }}</h3>
+      <form (ngSubmit)="saveMedicine()">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" [(ngModel)]="newMedicine.name" name="name" required class="form-control" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category *</label>
+            <input type="text" [(ngModel)]="newMedicine.category" name="category" required class="form-control" />
+          </div>
+          <div class="form-group">
+            <label>Manufacturer *</label>
+            <input type="text" [(ngModel)]="newMedicine.manufacturer" name="manufacturer" required class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea [(ngModel)]="newMedicine.description" name="description" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price *</label>
+            <input type="number" [(ngModel)]="newMedicine.price" name="price" required class="form-control" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label>Stock Quantity *</label>
+            <input type="number" [(ngModel)]="newMedicine.stockQuantity" name="stock" required class="form-control" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Expiry Date *</label>
+          <input type="date" [(ngModel)]="newMedicine.expiryDate" name="expiry" required class="form-control" />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

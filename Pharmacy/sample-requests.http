@@ -1,0 +1,115 @@
+### Test Pharmacy API Endpoints
+
+@baseUrl = http://localhost:5091/api
+
+### Create a Client
+POST {{baseUrl}}/Clients
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "phoneNumber": "123-456-7890",
+  "email": "john@example.com",
+  "address": "123 Main St"
+}
+
+### Get all Clients
+GET {{baseUrl}}/Clients
+
+### Get Client by ID
+GET {{baseUrl}}/Clients/1
+
+### Update Client (simplified - no id or createdDate needed)
+PUT {{baseUrl}}/Clients/1
+Content-Type: application/json
+
+{
+  "name": "John Doe Updated",
+  "phoneNumber": "123-456-7890",
+  "email": "john.updated@example.com",
+  "address": "456 New Address"
+}
+
+### Delete Client
+DELETE {{baseUrl}}/Clients/1
+
+###
+
+### Create an Employee
+POST {{baseUrl}}/Employees
+Content-Type: application/json
+
+{
+  "name": "Jane Smith",
+  "position": "Pharmacist",
+  "phoneNumber": "555-1234",
+  "email": "jane@pharmacy.com",
+  "salary": 50000
+}
+
+### Get all Employees
+GET {{baseUrl}}/Employees
+
+### Get Employee by ID
+GET {{baseUrl}}/Employees/1
+
+###
+
+### Create a Medicine
+POST {{baseUrl}}/Medicines
+Content-Type: application/json
+
+{
+  "name": "Aspirin",
+  "description": "Pain reliever",
+  "category": "Pain Relief",
+  "price": 9.99,
+  "stockQuantity": 100,
+  "expiryDate": "2026-12-31",
+  "manufacturer": "PharmaCorp"
+}
+
+### Get all Medicines
+GET {{baseUrl}}/Medicines
+
+### Get Medicine by ID
+GET {{baseUrl}}/Medicines/1
+
+### Get Low Stock Medicines (threshold = 10)
+GET {{baseUrl}}/Medicines/LowStock?threshold=10
+
+###
+
+### Create an InOut Transaction (Stock IN)
+POST {{baseUrl}}/InOuts
+Content-Type: application/json
+
+{
+  "medicineId": 1,
+  "employeeId": 1,
+  "transactionType": "In",
+  "quantity": 50,
+  "notes": "New stock arrival"
+}
+
+### Create an InOut Transaction (Stock OUT - Sale)
+POST {{baseUrl}}/InOuts
+Content-Type: application/json
+
+{
+  "medicineId": 1,
+  "employeeId": 1,
+  "clientId": 1,
+  "transactionType": "Out",
+  "quantity": 5,
+  "notes": "Sale to customer"
+}
+
+### Get all InOut Transactions
+GET {{baseUrl}}/InOuts
+
+### Get InOut by ID
+GET {{baseUrl}}/InOuts/1
+
+### Get InOuts by Medicine
+GET {{baseUrl}}/InOuts/Medicine/1
